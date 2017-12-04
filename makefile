@@ -1,6 +1,7 @@
 CC=gcc
 
-CFLAGS=-g -pedantic -lm -w -ansi -Wall -D_GNU_SOURCE=1 -D_REENTRANT
+#CFLAGS=-g -pedantic -lm -w -ansi -Wall -D_GNU_SOURCE=1 -D_REENTRANT
+CFLAGS=-lm -w
 SFLAGS=-lSDL2 -lSDL2main
 LIBs_FLAGS=-lSDL2_image -lSDL2_mixer -lSDL2_ttf
 
