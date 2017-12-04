@@ -190,14 +190,14 @@ void loadSound(int flag){
 	switch(flag){
 		case 1:
 			n = 2;
-			sound[0] = Mix_LoadWAV("././sounds/hoverButton.wav");
-			sound[1] = Mix_LoadWAV("././sounds/clickButton.wav");
+			sound[0] = Mix_LoadWAV("././sounds/hoverButton.mp3");
+			sound[1] = Mix_LoadWAV("././sounds/clickButton.mp3");
 			break;
 		case 2:
 			n = 3;
-			sound[0] = Mix_LoadWAV("././sounds/lauchBall.wav");
-			sound[1] = Mix_LoadWAV("././sounds/colideBall.wav");
-			sound[2] = Mix_LoadWAV("././sounds/deleteBall.wav");
+			sound[0] = Mix_LoadWAV("././sounds/lauchBall.mp3");
+			sound[1] = Mix_LoadWAV("././sounds/colideBall.mp3");
+			sound[2] = Mix_LoadWAV("././sounds/deleteBall.mp3");
 			break;
 	}
 	for(i = 0;i < n;i++){
