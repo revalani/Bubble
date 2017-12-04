@@ -575,11 +575,10 @@ void registerScore(int score, char*name){
 	char line[30];
 	int i,j=0;
 	FILE *arq;
-	puts("A");
-	arq = fopen("././ranking/hiscores.txt","r+");
+	arq = fopen("././ranking/hiscores.txt","r");
 	if(!arq){exit(1);}
 
-	for(i = 0;i < 10;i++){
+	for(i = 0;i < 11;i++){
 		player[i].name = (char*)malloc(16*sizeof(char));
 		fgets(line,30,arq);
 		sscanf(line,"%s %d",player[i].name, &player[i].score);
@@ -594,7 +593,7 @@ void registerScore(int score, char*name){
 			temp = player[i];
 			player[i] = player[i+1];
 			player[i+1] = temp;
-			i = 0;
+			i =-1;
 		}
 		j++;
 	}
