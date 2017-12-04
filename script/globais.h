@@ -50,6 +50,8 @@ typedef struct _PLAYER{
 	int score;
 } PLAYER;
 
+extern int alternate;
+
 extern BALL NewBall;
 extern BALL ActualBall;
 extern GAME game;
@@ -67,7 +69,6 @@ extern int VOLUME;
 extern TTF_Font*font;
 extern SDL_Color ttfColor;
 extern SDL_Surface* surfaceMessage;
-extern SDL_Texture* Message;
 extern SDL_Rect Message_rect;
 
 #endif

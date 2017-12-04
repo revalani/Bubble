@@ -29,7 +29,7 @@ void gameplay(){
 	char str[10];
 	int i,j;
 	
-	ActualBall = createBALL(25 + (S_GFWIDTH - IMGWIDTH)/2 , (S_GFHEIGHT - IMGHEIGHT),0,0,True);
+	ActualBall = createBALL(IMGWIDTH/2 + (S_GFWIDTH - IMGWIDTH)/2 , (S_GFHEIGHT - IMGHEIGHT),0,0,True);
 	NewBall = createBALL(30 + S_GIWIDTH, (S_GFHEIGHT - IMGHEIGHT),0,0,True);
 	InitializeMatrix();
 	loadMusic(2);
@@ -50,7 +50,6 @@ void gameplay(){
 				break;
 				case SDL_KEYDOWN:
 					if (Event.key.keysym.sym == SDLK_ESCAPE) {
-						puts("ok");
 						kill = True;
 					}
 					if (Event.key.keysym.sym == SDLK_m) {
@@ -68,7 +67,7 @@ void gameplay(){
 							SpeedVector = generateSpeed(ArrowX,ArrowY,teta);
 
 							if(!SpeedVector){
-								return 1;
+								exit(1);
 							}
 							giveSpeed(SpeedVector,&ActualBall);
 						}
@@ -84,7 +83,7 @@ void gameplay(){
 		dstRect.y = 0;
 		SDL_BlitSurface( gJPGSurface[5], &srcRect,gScreenSurface, &dstRect );
 		quit = moveBALL();
-		srcRect.x = 50*(count%4); srcRect.y = 0;
+		srcRect.x = IMGWIDTH*(count%4); srcRect.y = 0;
 		srcRect.w = IMGWIDTH;
 		srcRect.h = IMGHEIGHT;
 		
@@ -116,27 +115,30 @@ void gameplay(){
 		Message_rect.x = 640; Message_rect.y = 120;
 		Message_rect.w = 200; Message_rect.h = 100;
 		snprintf(str,sizeof(str),"%d",game.score);
-		Message = TTF_RenderText_Solid( font , str , ttfColor );
-		SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+		surfaceMessage = TTF_RenderText_Solid( font , str , ttfColor );
+		SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+		SDL_FreeSurface(surfaceMessage);
 
 		Message_rect.x = 650; Message_rect.y = 200;
 		Message_rect.w = 200; Message_rect.h = 100;
 		snprintf(str,sizeof(str),"%d",game.life);
-		Message = TTF_RenderText_Solid( font , str , ttfColor );
-		SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+		surfaceMessage = TTF_RenderText_Solid( font , str , ttfColor );
+		SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+		SDL_FreeSurface(surfaceMessage);
 
 		Message_rect.x = 618; Message_rect.y = 200;
 		Message_rect.w = 50; Message_rect.h = 50;
-		Message = TTF_RenderText_Solid( font , "L" , ttfColor );
-		SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+		surfaceMessage = TTF_RenderText_Solid( font , "L" , ttfColor );
+		SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+		SDL_FreeSurface(surfaceMessage);
   		/*atualiza a imagem que será exibida na tela*/
 		SDL_UpdateWindowSurface( gWindow );
 
 
 		
-		SDL_Delay(5);
+		SDL_Delay(0);
 	}
-
+	TTF_CloseFont(font);
 	/*Tela de Nomeacao do jogador*/
 	if(lowScore() < game.score){
 		quit = 0;
@@ -150,9 +152,7 @@ void gameplay(){
 						exit(1);
 					break;
 					case SDL_KEYDOWN:
-						if(strlen(name) < 15){
-							writeName(Event.key.keysym.sym,name);
-						}
+						writeName(Event.key.keysym.sym,name);
 						if (Event.key.keysym.sym == SDLK_ESCAPE) {
 							quit = 1;
 						}
@@ -167,24 +167,30 @@ void gameplay(){
 			SDL_BlitSurface( NULL, NULL,gScreenSurface, NULL );
 
 			/*texto grande*/
-			font = TTF_OpenFont("././fonts/pixelmix.ttf",30);
+			font = TTF_OpenFont("././fonts/vinivicious.ttf",30);
 			Message_rect.x = (S_WIDTH/2)-100; Message_rect.y = 50;
-			Message = TTF_RenderText_Solid( font , "Game Over" , ttfColor );
-			SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
-			font = TTF_OpenFont("././fonts/pixelmix.ttf",20);
+			surfaceMessage = TTF_RenderText_Solid( font , "Game Over" , ttfColor );
+			SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+			TTF_CloseFont(font);
+			SDL_FreeSurface(surfaceMessage);
+			font = TTF_OpenFont("././fonts/vinivicious.ttf",20);
 			Message_rect.x = (S_WIDTH/2)-130; Message_rect.y = 80;
-			Message = TTF_RenderText_Solid( font , "Escreva o seu Nome:" , ttfColor );
-			SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+			surfaceMessage = TTF_RenderText_Solid( font , "Escreva o seu Nome:" , ttfColor );
+			SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+			TTF_CloseFont(font);
+			SDL_FreeSurface(surfaceMessage);
 			
 			
 			/*Nome do jogador*/
-			font = TTF_OpenFont("././fonts/pixelmix.ttf",22);
-			Message = TTF_RenderText_Solid( font ,name, ttfColor );
+			font = TTF_OpenFont("././fonts/vinivicious.ttf",22);
+			surfaceMessage = TTF_RenderText_Solid( font ,name, ttfColor );
 			Message_rect.x = (S_WIDTH/2)-(8*strlen(name)); 
 			Message_rect.y = 300;
 			Message_rect.w = 50 /*+ 18*strlen(name)*/; 
 			Message_rect.h = 50;
-			SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+			SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+			TTF_CloseFont(font);
+			SDL_FreeSurface(surfaceMessage);
 			SDL_UpdateWindowSurface( gWindow );
 		}
 		registerScore(game.score,name);
@@ -205,7 +211,7 @@ void records(){
 	arq = fopen("././ranking/hiscores.txt","r");
 	if(!arq){exit(1);}
 	
-	font = TTF_OpenFont("././fonts/pixelmix.ttf",48);
+	font = TTF_OpenFont("././fonts/vinivicious.ttf",48);
 	if (!font) {
 		printf("Nao consegui carregar fonte. %s\n", TTF_GetError());
 		exit(1);
@@ -244,17 +250,20 @@ void records(){
 		Message_rect.x = 250; Message_rect.y = 50;
 		Message_rect.w = 400; Message_rect.h = 150;
 		ttfColor.r = 245; ttfColor.g = 245; ttfColor.b = 245;
-		Message = TTF_RenderText_Solid( font , "HI-SCORES" , ttfColor );
-		SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
-		font = TTF_OpenFont("././fonts/pixelmix.ttf",18);
+		surfaceMessage = TTF_RenderText_Solid( font , "HI-SCORES" , ttfColor );
+		SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+		TTF_CloseFont(font);
+		SDL_FreeSurface(surfaceMessage);
+		font = TTF_OpenFont("././fonts/vinivicious.ttf",18);
 		for(i = 0; i < 10;i++){
 			fscanf(arq,"%s %d",array,&score);
 			snprintf(str,sizeof(str),"%d",score);
 			strcat(array,"  "); strcat(array,str);
-			Message = TTF_RenderText_Solid( font ,array, ttfColor );
+			surfaceMessage = TTF_RenderText_Solid( font ,array, ttfColor );
 			Message_rect.x = 350; Message_rect.y = 120 + 30*i;
 			Message_rect.w = 200; Message_rect.h = 50;
-			SDL_BlitSurface( Message , NULL , gScreenSurface , &Message_rect );
+			SDL_BlitSurface( surfaceMessage , NULL , gScreenSurface , &Message_rect );
+			SDL_FreeSurface(surfaceMessage);
 		}
 		rewind(arq);
 		srcRect.x = 0; srcRect.y = 0;
@@ -263,7 +272,8 @@ void records(){
 		dstRect.y = 500;
 		SDL_BlitSurface( gJPGSurface[0], &srcRect,gScreenSurface, &dstRect );
 		SDL_UpdateWindowSurface( gWindow );
-		font = TTF_OpenFont("././fonts/pixelmix.ttf",48);
+		TTF_CloseFont(font);
+		font = TTF_OpenFont("././fonts/vinivicious.ttf",48);
 	}
 	free(font);
 	fclose(arq);
@@ -347,6 +357,7 @@ int main(int argc, char** argv){
 								Mix_PlayChannel(-1, sound[1],0);
 								switch(i){
 									case 0:
+										SDL_Delay(1000);
 										freeSurfaces(1);
 										loadMedia(3);
 										Mix_FreeMusic(music);

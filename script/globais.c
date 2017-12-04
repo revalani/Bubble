@@ -6,6 +6,8 @@
 #include "macros.h"*/
 #include "globais.h"
 
+int alternate;
+
 BALL NewBall;
 BALL ActualBall;
 GAME game;
@@ -23,5 +25,4 @@ int VOLUME = 0;
 TTF_Font*font;
 SDL_Color ttfColor;
 SDL_Surface* surfaceMessage;
-SDL_Texture* Message;
 SDL_Rect Message_rect;

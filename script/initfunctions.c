@@ -38,6 +38,9 @@ void initButtons(){
 }
 
 int Initialize() {
+	
+	alternate = 0;
+	
 	bool success = True;
 
 	srand(time(NULL));
@@ -93,7 +96,7 @@ int loadMedia(int flag) {
 			break;
 		case 2:
 			n = 2;
-			gJPGSurface[0] = loadSurface( "././img/RETURN.png" ,1);
+			gJPGSurface[0] = loadSurface( "././img/PLAY.png" ,1);//era RETURN
 			gJPGSurface[1] = loadSurface( "././img/hiscoresBG.png" ,0);
 			break;
 		case 3:
@@ -190,7 +193,7 @@ void loadSound(int flag){
 	switch(flag){
 		case 1:
 			n = 2;
-			sound[0] = Mix_LoadWAV("././sounds/hoverButton.mp3");
+			sound[0] = Mix_LoadWAV("././sounds/hoverButton.mp3");//era hoverButton
 			sound[1] = Mix_LoadWAV("././sounds/clickButton.mp3");
 			break;
 		case 2:
@@ -200,19 +203,28 @@ void loadSound(int flag){
 			sound[2] = Mix_LoadWAV("././sounds/deleteBall.mp3");
 			break;
 	}
+	for(i = 0; i < n;i++){
+		if(!sound[i]){
+			printf("Fail to load sound %d\n",i);
+			printf("%s\n",SDL_GetError());
+			exit(1);
+		}
+	}
 	for(i = 0;i < n;i++){
 		Mix_VolumeChunk(sound[i],MIX_MAX_VOLUME);
 	}
 }
 
 void loadMusic(int flag){
-	int i;
 	switch(flag){
 		case 1:
 			music = Mix_LoadMUS("././sounds/menuMusic.mp3");
 			break;
 		case 2:
 			music = Mix_LoadMUS("././sounds/gameMusic.mp3");
+	}
+	if(!music){
+		puts("Fail to load Music");
 	}
 }
 

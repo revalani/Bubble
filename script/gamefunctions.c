@@ -46,8 +46,11 @@ void generateNewLine(){
 		game.Matrix[0][i].isMoving = False;
 		game.Matrix[0][i].isShowing = True;
 		game.Matrix[0][i].visited = False;
+		if(!alternate){
+			game.Matrix[0][i].PosX += IMGWIDTH/2;
+		}
 	}
-
+	alternate = !alternate;
 }
 
 int lowerLine(){
@@ -55,7 +58,6 @@ int lowerLine(){
 	for(i = LINES - 2; i >= 0;i--){
 		for(j = 0;j<COLUMS;j++){
 			game.Matrix[i+1][j] = game.Matrix[i][j];
-			game.Matrix[i+1][j].PosX = S_GIWIDTH + (j)*IMGWIDTH;
 			game.Matrix[i+1][j].PosY = S_GIHEIGHT + (i+1)*IMGHEIGHT;
 		}
 	}
@@ -69,7 +71,6 @@ int lowerLine(){
 
 int aproximate(){
 	int i,j;
-	int quit = 0;
 	for(i = 0;i < LINES;i++){
 		if(S_GIHEIGHT + i*IMGHEIGHT > ActualBall.PosY){
 			break;
@@ -79,12 +80,24 @@ int aproximate(){
 		}
 	}
 	for(j=0;j<COLUMS;j++){
-		if(S_GIWIDTH + j*IMGWIDTH > ActualBall.PosX + IMGWIDTH/2){
-			if(!game.Matrix[i][j-1].isShowing){
-				break;
+		if((i+alternate)%2){
+			if(IMGWIDTH/2 + S_GIWIDTH + j*IMGWIDTH > ActualBall.PosX + IMGWIDTH/2){
+				if(!game.Matrix[i][j-1].isShowing){
+					break;
+				}
+				else{
+					continue;
+				}
 			}
-			else{
-				continue;
+		}
+		else{
+			if(S_GIWIDTH + j*IMGWIDTH > ActualBall.PosX + IMGWIDTH/2){
+				if(!game.Matrix[i][j-1].isShowing){
+					break;
+				}
+				else{
+					continue;
+				}
 			}
 		}
 	}
@@ -92,15 +105,15 @@ int aproximate(){
 	if(game.Matrix[i][j].isShowing){
 		if(ActualBall.SpeedX < 0){
 			j++;
-			if(game.Matrix[i][j].isShowing){
+			/*if(game.Matrix[i][j].isShowing){
 				j--;
-			}
+			}*/
 		}
 		if(ActualBall.SpeedX > 0){
 			j--;
-			if(game.Matrix[i][j].isShowing){
+			/*if(game.Matrix[i][j].isShowing){
 				j++;
-			}
+			}*/
 		}
 	}
 		
@@ -152,6 +165,16 @@ int countBall(int Pi, int Pj, int c,int secondRound){
 			}
 			if(game.Matrix[Pi+i][Pj+j].visited){
 				continue;
+			}
+			if((Pi+alternate)%2){
+				if(i && j < 0){
+					continue;
+				}
+			}
+			if(!((Pi+alternate)%2)){
+				if(i && j > 0){
+					continue;
+				}
 			}
 			game.Matrix[Pi+i][Pj+j].visited = 1;
 			if(game.Matrix[Pi+i][Pj+j].Color == c && game.Matrix[Pi+i][Pj+j].isShowing){
@@ -292,6 +315,9 @@ void InitializeMatrix(void){
 				game.Matrix[i][j].isMoving = False;
 				game.Matrix[i][j].isShowing = False;
 				game.Matrix[i][j].visited = False;
+				if(i%2){
+					game.Matrix[i][j].PosX += IMGWIDTH/2;
+				}
 			}
 		}
 	}
@@ -361,28 +387,37 @@ bool deleteBubble(int i,int j,int c,int flag){
 		}
 	}
 	if((i < LINES - 1) && (j < COLUMS - 1)){
-		if(!game.Matrix[i+1][j+1].visited){
-			deleteBubble(i+1,j+1,c,flag);
+		if((i+alternate)%2){
+			if(!game.Matrix[i+1][j+1].visited){
+				deleteBubble(i+1,j+1,c,flag);
+			}
 		}
 	}
 	
 	if((i < LINES - 1) && (j > 0)){
-		if(!game.Matrix[i+1][j-1].visited){
-			deleteBubble(i+1,j-1,c,flag);
+		if(!((i+alternate)%2)){
+			if(!game.Matrix[i+1][j-1].visited){
+				deleteBubble(i+1,j-1,c,flag);
+			}
 		}
 	}
 	
 	if((i > 0) && (j < COLUMS - 1)){
-		if(!game.Matrix[i-1][j+1].visited){
-			deleteBubble(i-1,j+1,c,flag);
+		if((i+alternate)%2){
+			if(!game.Matrix[i-1][j+1].visited){
+				deleteBubble(i-1,j+1,c,flag);
+			}
 		}
 	}
 	
 	if((i > 0) && (j > 0)){
-		if(!game.Matrix[i-1][j-1].visited){
-			deleteBubble(i-1,j-1,c,flag);
+		if(!((i+alternate)%2)){
+			if(!game.Matrix[i-1][j-1].visited){
+				deleteBubble(i-1,j-1,c,flag);
+			}
 		}
 	}
+	return False;
 }
 
 bool checkBubble(int i,int j){
@@ -424,26 +459,34 @@ bool checkBubble(int i,int j){
 	}
 	
 	if((i < LINES - 1) && (j < COLUMS - 1)){
-		if(!game.Matrix[i+1][j+1].visited){
-			teste += checkBubble(i+1,j+1);
+		if((i+alternate)%2){
+			if(!game.Matrix[i+1][j+1].visited){
+				teste += checkBubble(i+1,j+1);
+			}
 		}
 	}
 	
 	if((i < LINES - 1) && (j > 0)){
-		if(!game.Matrix[i+1][j-1].visited){
-			teste += checkBubble(i+1,j-1);
+		if(!((i+alternate)%2)){
+			if(!game.Matrix[i+1][j-1].visited){
+				teste += checkBubble(i+1,j-1);
+			}
 		}
 	}
 	
 	if((i > 0) && (j < COLUMS - 1)){
-		if(!game.Matrix[i-1][j+1].visited){
-			teste += checkBubble(i-1,j+1);
+		if((i+alternate)%2){
+			if(!game.Matrix[i-1][j+1].visited){
+				teste += checkBubble(i-1,j+1);
+			}
 		}
 	}
 	
 	if((i > 0) && (j > 0)){
-		if(!game.Matrix[i-1][j-1].visited){
-			teste += checkBubble(i-1,j-1);
+		if(!((i+alternate)%2)){
+			if(!game.Matrix[i-1][j-1].visited){
+				teste += checkBubble(i-1,j-1);
+			}
 		}
 	}
 	
@@ -470,97 +513,151 @@ void deleteIsland(){
 void writeName(int key,char*name){
 	switch(key){
 		case SDLK_a:
-			strcat(name,"A");
+			if(strlen(name) < 15){
+				strcat(name,"A");
+			}
 			break;
 		case SDLK_b:
-			strcat(name,"B");
+			if(strlen(name) < 15){
+				strcat(name,"B");
+			}
 			break;
 		case SDLK_c:
-			strcat(name,"C");
+			if(strlen(name) < 15){
+				strcat(name,"C");
+			}
 			break;
 		case SDLK_d:
-			strcat(name,"D");
+			if(strlen(name) < 15){
+				strcat(name,"D");
+			}
 			break;
 		case SDLK_e:
-			strcat(name,"E");
+			if(strlen(name) < 15){
+				strcat(name,"E");
+			}
 			break;
 		case SDLK_f:
-			strcat(name,"F");
+			if(strlen(name) < 15){
+				strcat(name,"F");
+			}
 			break;
 		case SDLK_g:
-			strcat(name,"G");
+			if(strlen(name) < 15){
+				strcat(name,"G");
+			}
 			break;
 		case SDLK_h:
-			strcat(name,"H");
+			if(strlen(name) < 15){
+				strcat(name,"H");
+			}
 			break;
 		case SDLK_i:
-			strcat(name,"I");
+			if(strlen(name) < 15){
+				strcat(name,"I");
+			}
 			break;
 		case SDLK_j:
-			strcat(name,"J");
+			if(strlen(name) < 15){
+				strcat(name,"J");
+			}
 			break;
 		case SDLK_k:
-			strcat(name,"K");
+			if(strlen(name) < 15){
+				strcat(name,"K");
+			}
 			break;
 		case SDLK_l:
-			strcat(name,"L");
+			if(strlen(name) < 15){
+				strcat(name,"L");
+			}
 			break;
 		case SDLK_m:
-			strcat(name,"M");
+			if(strlen(name) < 15){
+				strcat(name,"M");
+			}
 			break;
 		case SDLK_n:
-			strcat(name,"N");
+			if(strlen(name) < 15){
+				strcat(name,"N");
+			}
 			break;
 		case SDLK_o:
-			strcat(name,"O");
+			if(strlen(name) < 15){
+				strcat(name,"O");
+			}
 			break;
 		case SDLK_p:
-			strcat(name,"P");
+			if(strlen(name) < 15){
+				strcat(name,"P");
+			}
 			break;
 		case SDLK_q:
-			strcat(name,"Q");
+			if(strlen(name) < 15){
+				strcat(name,"Q");
+			}
 			break;
 		case SDLK_r:
-			strcat(name,"R");
+			if(strlen(name) < 15){
+				strcat(name,"R");
+			}
 			break;
 		case SDLK_s:
-			strcat(name,"S");
+			if(strlen(name) < 15){
+				strcat(name,"S");
+			}
 			break;
 		case SDLK_t:
-			strcat(name,"T");
+			if(strlen(name) < 15){
+				strcat(name,"T");
+			}
 			break;
 		case SDLK_u:
-			strcat(name,"U");
+			if(strlen(name) < 15){
+				strcat(name,"U");
+			}
 			break;
 		case SDLK_v:
-			strcat(name,"V");
+			if(strlen(name) < 15){
+				strcat(name,"V");
+			}
 			break;
 		case SDLK_w:
-			strcat(name,"W");
+			if(strlen(name) < 15){
+				strcat(name,"W");
+			}
 			break;
 		case SDLK_x:
-			strcat(name,"X");
+			if(strlen(name) < 15){
+				strcat(name,"X");
+			}
 			break;
 		case SDLK_y:
-			strcat(name,"Y");
+			if(strlen(name) < 15){
+				strcat(name,"Y");
+			}	
 			break;
 		case SDLK_z:
-			strcat(name,"Z");
+			if(strlen(name) < 15){
+				strcat(name,"Z");
+			}
 			break;
 		case SDLK_BACKSPACE:
-			name[strlen(name) - 1] = '\0';
+			if(strlen(name)>=1){
+				name[strlen(name) - 1] = '\0';
+			}
 			break;
 	}
 }
 
 int lowScore(){
 	FILE*arq;
-	if(!arq){return 1;}
 	int i;
 	char array[30];
 	char nameDummy[15];
 	int lowest;
 	arq = fopen("././ranking/hiscores.txt","r");
+	if(!arq){exit(1);}
 	for(i = 0; i < 10;i++){
 		fgets(array,30,arq);
 	}
@@ -570,38 +667,32 @@ int lowScore(){
 }
 
 void registerScore(int score, char*name){
-	PLAYER player[11];
+	PLAYER player[10];
 	PLAYER temp;
 	char line[30];
-	int i,j=0;
-	FILE *arq;
-	arq = fopen("././ranking/hiscores.txt","r");
+	int i;
+	FILE*arq;
+	arq = fopen("././ranking/hiscores.txt","r+");
 	if(!arq){exit(1);}
-
-	for(i = 0;i < 11;i++){
+	for(i = 0;i < 10;i++){
 		player[i].name = (char*)malloc(16*sizeof(char));
 		fgets(line,30,arq);
-		sscanf(line,"%s %d",player[i].name, &player[i].score);
-		printf("%d\n",player[i].score );
+		sscanf(line,"%s %d",player[i].name, &player[i].score);	
 	}
-	player[10].name = name;
-	player[10].score = score;
-
-	for(i = 0;i < 10;i++){
-		printf("%d \t%d \t%d\n",j,i,player[i].score );
+	player[9].name = name;
+	player[9].score = score;
+	for(i = 0;i < 9;i++){
 		if(player[i+1].score > player[i].score){
 			temp = player[i];
 			player[i] = player[i+1];
 			player[i+1] = temp;
-			i =-1;
+			i = -1;
 		}
-		j++;
 	}
-	fclose(arq);
+	/*fclose(arq);*/
 	arq = fopen("././ranking/hiscores.txt","w");
 	for(i = 0;i < 10;i++){
 		fprintf(arq,"%s  %d\n",player[i].name,player[i].score);
-		printf("# %d\n",player[i].score );
 	}
 	fclose(arq);
 }
@@ -618,4 +709,3 @@ int checkLowest(){
 	}
 	return 0;
 }
-				

@@ -5,8 +5,8 @@
 #define False 0
 #define bool int
 
-#define IMGWIDTH	50
-#define IMGHEIGHT	50
+#define IMGWIDTH	24
+#define IMGHEIGHT	24
 
 #define S_GIWIDTH	30
 #define S_GIHEIGHT	20
@@ -36,10 +36,10 @@
 
 #define INTERVAL 160
 
-#define LINES 10
-#define COLUMS 10
+#define LINES 20
+#define COLUMS 20
 
-#define RADIUS 17
+#define RADIUS 12
 #define pi 3.14156
 
 /*#define PastaImagn "././img/"
